@@ -1,5 +1,7 @@
 package forms;
 
+import services.ArcAPI;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -19,6 +21,8 @@ public class CreateDiffForm extends JDialog {
     private JTextField textField2;
 
     public CreateDiffForm() {
+        ArcAPI a = new ArcAPI();
+        a.getProjects();
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
