@@ -1,55 +1,27 @@
 package forms;
 
-import services.ArcAPI;
+import com.intellij.openapi.project.Project;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.Document;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.*;
 
+
 public class CreateDiffForm extends JDialog {
+    private static Project myProject;
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
     private JComboBox<String> subscribersCB;
-    private JComboBox<String> reviewersCB;
     private JTextField textField1;
-    private JTextField textField3;
     private JTextField textField2;
+    private JTextField reviewersText;
+    private JTextPane textPane1;
 
     public CreateDiffForm() {
-        ArcAPI a = new ArcAPI();
-        a.getProjects();
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
-        subscribersCB.addItem("aa");
-        subscribersCB.addItem("bb");
-        subscribersCB.addItem("ab");
-        subscribersCB.addItem("ac");
-        subscribersCB.addItem("cc");
-        final JTextComponent tc = (JTextComponent) subscribersCB.getEditor().getEditorComponent();
-        tc.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                subscribersCB.showPopup();
-                String text = (String) subscribersCB.getEditor().getItem();
-                // todo add filtering logic
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                subscribersCB.showPopup();
-                String text = (String) subscribersCB.getEditor().getItem();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-            }
-        });
 
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -89,7 +61,8 @@ public class CreateDiffForm extends JDialog {
         dispose();
     }
 
-    public static void main() {
+    public static void main(Project project) {
+        myProject = project;
         CreateDiffForm dialog = new CreateDiffForm();
         dialog.pack();
         dialog.setVisible(true);

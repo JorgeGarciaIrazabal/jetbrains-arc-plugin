@@ -6,15 +6,17 @@ import khttp.post
 import org.json.JSONArray
 import org.json.JSONObject
 import org.json.simple.parser.JSONParser
-import org.json.simple.JSONObject as JsonObject
+import java.io.FileReader
 import java.nio.file.Path
 import java.nio.file.Paths
-import java.io.FileReader
+import org.json.simple.JSONObject as JsonObject
 
-class ArcAPI() {
+object ArcAPI {
     private var arcToken: String
     private var arcHost: String
     private var arcPath: Path
+    private var users: List<User> = emptyList()
+    private var projects: List<Project> = emptyList()
 
     init {
         val home = Paths.get(System.getProperty("user.home"))
@@ -28,19 +30,25 @@ class ArcAPI() {
     }
 
     fun getUsers(): List<User> {
-        val projectJsonList = getAll("user.search")
-        return projectJsonList.map {
-            val fields = it.getJSONObject("fields")
-            User(name = fields.getString("realName"), username = fields.getString("username"), id = it.getInt("id"))
+        if (users.isEmpty()) {
+            val projectJsonList = getAll("user.search")
+            users = projectJsonList.map {
+                val fields = it.getJSONObject("fields")
+                User(name = fields.getString("realName"), username = fields.getString("username"), id = it.getInt("id"))
+            }
         }
+        return users
     }
 
     fun getProjects(): List<Project> {
-        val projectJsonList = getAll("project.search")
-        return projectJsonList.map {
-            val fields = it.getJSONObject("fields")
-            Project(name = fields.getString("name"), slug = fields.getString("slug"), id = it.getInt("id"))
+        if (projects.isEmpty()) {
+            val projectJsonList = getAll("project.search")
+            projects = projectJsonList.map {
+                val fields = it.getJSONObject("fields")
+                Project(name = fields.getString("name"), slug = fields.getString("slug"), id = it.getInt("id"))
+            }
         }
+        return projects
     }
 
     private fun getAll(url: String): MutableList<JSONObject> {
