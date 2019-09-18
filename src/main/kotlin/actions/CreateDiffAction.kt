@@ -2,7 +2,7 @@ package actions
 
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
-import dsl.SampleDialogWrapper
+import forms.SampleDialogWrapper
 
 class CreateDiffAction : AnAction() {
     override fun actionPerformed(event: AnActionEvent) {
