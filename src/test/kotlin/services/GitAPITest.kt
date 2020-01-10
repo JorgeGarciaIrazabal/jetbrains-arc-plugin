@@ -18,9 +18,16 @@ internal class GitAPITest() {
     }
 
     @org.junit.jupiter.api.Test
-    fun getGitLog() {
-        val log = GitAPI.getLog()
-        assertTrue(log.split("\n").size > 1)
+    fun getGitBranch() {
+        val branch = GitAPI.repository.branch
+        assertTrue(branch == "master")
     }
 
+    @org.junit.jupiter.api.Test
+    fun getGitLog() {
+        for (commit in GitAPI.getLog()) {
+            println(commit.fullMessage)
+            println(commit.authorIdent.name)
+        }
+    }
 }
