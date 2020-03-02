@@ -1,8 +1,9 @@
 package services
 
+import org.eclipse.jgit.api.Git
+import org.eclipse.jgit.lib.Ref
 import org.eclipse.jgit.lib.Repository
 import org.eclipse.jgit.revwalk.RevCommit
-import org.eclipse.jgit.revwalk.RevWalk
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder
 import java.io.File
 import java.nio.file.Paths
@@ -20,24 +21,25 @@ object GitAPI {
             .build()
     }
 
-    fun getLogProcess(): Process {
-        return runCommand("git log --pretty=oneline")
+    fun getLog(to: String = "refs/heads/master"): List<RevCommit> {
+        val git = Git(repository)
+        val master = git.repository.resolve(to)
+        val branch = git.repository.resolve("HEAD")
+        val commits = git.log().addRange(master, branch).call()
+
+        return commits.toList()
     }
 
-    fun getLog(): List<RevCommit> {
-        val walk = RevWalk(repository)
-        walk.markStart(walk.parseCommit(GitAPI.repository.resolve("HEAD")))
-        return walk.takeWhile {
-            it.parentCount == 1
+    fun listBranches(): Collection<Ref> {
+        val git = Git(repository)
+        val remoteRefs: Collection<Ref> = git.lsRemote()
+            .setRemote("origin")
+            .setTags(false)
+            .setHeads(false)
+            .call()
+        for (ref in remoteRefs) {
+            println(ref.name + " -> " + ref.objectId.name())
         }
-    }
-
-
-    private fun runCommand(command: String): Process {
-        val parts = command.split("\\s".toRegex())
-        return ProcessBuilder(*parts.toTypedArray())
-            .redirectOutput(ProcessBuilder.Redirect.PIPE)
-            .redirectError(ProcessBuilder.Redirect.PIPE)
-            .start()
+        return remoteRefs
     }
 }
