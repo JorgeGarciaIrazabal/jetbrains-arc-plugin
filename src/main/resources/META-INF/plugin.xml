@@ -34,6 +34,9 @@
             <add-to-group group-id="MainMenu" anchor="last"/>
             <action id="action.arc_ui.CreateDiff" class="actions.CreateDiffAction" text="Create _Diff"
                     description="A test menu item"/>
+
+            <action id="action.arc_ui.ListBranches" class="actions.ListBranches" text="List Branches"
+                    description="A test menu item"/>
         </group>
     </actions>
 

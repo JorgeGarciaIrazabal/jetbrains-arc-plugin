@@ -1,6 +1,6 @@
 package services
 
-import Project
+import ArcProject
 import User
 import khttp.post
 import org.json.JSONArray
@@ -18,7 +18,7 @@ object ArcAPI {
     private var arcPath: Path = Path.of("")
     private var arcEnabled: Boolean = true
     private var users: MutableList<User> = mutableListOf()
-    private var projects: MutableList<Project> = mutableListOf()
+    private var projects: MutableList<ArcProject> = mutableListOf()
 
     init {
         try {
@@ -56,16 +56,16 @@ object ArcAPI {
         return users
     }
 
-    fun getProjects(): List<Project> {
+    fun getProjects(): List<ArcProject> {
         if (projects.isEmpty()) {
             if (!arcEnabled) {
-                projects.add(Project(name = "data-tooling", slug = "data-tooling", id = 1))
+                projects.add(ArcProject(name = "data-tooling", slug = "data-tooling", id = 1))
                 return projects
             }
             val projectJsonList = getAll("project.search")
             projects = projectJsonList.map {
                 val fields = it.getJSONObject("fields")
-                Project(name = fields.getString("name"), slug = fields.getString("slug"), id = it.getInt("id"))
+                ArcProject(name = fields.getString("name"), slug = fields.getString("slug"), id = it.getInt("id"))
             }.toMutableList()
         }
         return projects

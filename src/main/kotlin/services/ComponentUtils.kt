@@ -1,5 +1,6 @@
 package services
 
+import ArcProject
 import User
 import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.openapi.editor.event.DocumentEvent
@@ -9,7 +10,6 @@ import java.awt.event.KeyEvent
 import javax.swing.JLabel
 import javax.swing.KeyStroke
 import javax.swing.Timer
-import Project as ArcProject
 
 
 fun getUsersAndProjects(): MutableMap<String, Any> {

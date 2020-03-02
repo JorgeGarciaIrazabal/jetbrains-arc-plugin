@@ -21,4 +21,9 @@ internal class GitAPITest() {
     fun getGitBranches() {
         GitAPI.listBranches()
     }
+
+    @org.junit.jupiter.api.Test
+    fun removeBranch() {
+//        GitAPI.removeBranch("refs/remotes/origin/branch_to_delete")
+    }
 }

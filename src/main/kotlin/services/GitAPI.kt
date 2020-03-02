@@ -1,10 +1,12 @@
 package services
 
 import org.eclipse.jgit.api.Git
+import org.eclipse.jgit.api.ListBranchCommand.ListMode
 import org.eclipse.jgit.lib.Ref
 import org.eclipse.jgit.lib.Repository
 import org.eclipse.jgit.revwalk.RevCommit
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder
+import org.eclipse.jgit.transport.RefSpec
 import java.io.File
 import java.nio.file.Paths
 
@@ -30,16 +32,20 @@ object GitAPI {
         return commits.toList()
     }
 
-    fun listBranches(): Collection<Ref> {
-        val git = Git(repository)
-        val remoteRefs: Collection<Ref> = git.lsRemote()
-            .setRemote("origin")
-            .setTags(false)
-            .setHeads(false)
-            .call()
-        for (ref in remoteRefs) {
-            println(ref.name + " -> " + ref.objectId.name())
+    fun listBranches(): MutableList<Ref> {
+        val list = Git(repository).branchList().setListMode(ListMode.REMOTE).call()
+        for (l in list) {
+            println(l.name)
         }
-        return remoteRefs
+        return list
+    }
+
+    fun removeBranch(branch: Ref) {
+        val git = Git(repository)
+        val refSpec = RefSpec()
+            .setSource(null)
+            .setDestination(branch.name)
+        git.push().setRefSpecs(refSpec).setRemote("origin").call()
+        println("test")
     }
 }
